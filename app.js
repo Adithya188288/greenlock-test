@@ -37,5 +37,7 @@ app.get('/', (req, res, next) => {
     }
 });
 
+app.listen(80, () => console.log('App is running'))
+
 // Instead do export the app:
 module.exports = app;
