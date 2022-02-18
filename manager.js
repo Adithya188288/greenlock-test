@@ -7,7 +7,7 @@ let db = {
 
 module.exports.create = function() {
     return {
-        find: async function({ subject, servername, renewBefore }) {
+        get: async function({ subject, servername, renewBefore }) {
             let altnames = db[servername];
             var site = {
                 subject: subject,
@@ -18,6 +18,10 @@ module.exports.create = function() {
         set:async function({ subject, altnames, renewAt, deletedAt }){
             var site = db[opts.subject] || {};
             db[opts.subject] = Object.assign(site, opts);
+        },
+        find:async function(opts) {
+            var site = db[opts.subject] || []
+            return site;
         }
     };
 };
