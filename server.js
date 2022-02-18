@@ -1,45 +1,39 @@
 var app = require('./app.js');
-var greenlock = require("greenlock-express");
-const http01 = require('le-challenge-fs').create({ webrootPath: '/tmp/acme-challenges' });
+var pkg = require('./package.json');
+const greenlockExpress = require('greenlock-express');
     
-
-const approvedDomains = ['testcdn.ml, user1.testcdn.ml', 'user2.testcdn.ml', 'app.testcdn.ml', 'www.testcdn.ml']
-
-greenlock.create({
-    server: 'https://acme-v02.api.letsencrypt.org/directory',
-    approveDomains,
-    app: app,
-    store,
-    configDir:'../certs',
-  })
-
-
-function checkDomain (domains, cb) {
-    const userAgrees = true
-    if (domains[0]) {
-      if(approvedDomains.includes(domains[0])){
-          cb(null, userAgrees);
-      }else{
-          cb(new Error('Domain not approved'))
-      }
-    } else {
-      cb(new Error('No domain found'))
-    }
+let config = {
+    packageRoot: __dirname,
+    configDir: "../create",
+    packageAgent: pkg.name + '/' + pkg.version,
+    maintainerEmail: 'adithyawordpres05@gmail.com',
+    staging: true,
+    notify: function(event, details) {
+        if ('error' === event) {
+            // `details` is an error object in this case
+            console.error(details);
+        }
+    },
+    
 }
 
-function approveDomains (opts, certs, cb) {
-    opts.challenges = { 'http-01': http01 }
-    opts.email = config.email
+greenlockExpress.init(function(){
+    var options = {
+        cluster: false,
+        packageAgent: pkg.name + '/' + pkg.version,
+        maintainerEmail: 'adithyawordpres05@gmail.com',
+        notify: function(ev, args) {
+            console.info(ev, args);
+        },
+        manager: {
+            module: './manager.js'
+        },
+        packageRoot: __dirname,
+    };
+    return options;
+}).serve(app)
 
-    if (certs) {
-        opts.domains = [certs.subject].concat(certs.altnames)
-    }
 
-    checkDomain(opts.domains, (err, agree) => {
-        if (err) { cb(err); return }
-        opts.agreeTos = agree
-        cb(null, { options: opts, certs: certs })
-    })
-}
 
-greenlock.listen(80, 443)
+
+
