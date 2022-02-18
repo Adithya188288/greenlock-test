@@ -11,10 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2",
-    "greenlock": "^4.0.4",
-    "greenlock-express": "^4.0.3",
-    "le-challenge-fs": "^2.0.9"
+    "express": "^4.17.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

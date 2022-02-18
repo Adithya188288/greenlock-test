@@ -10,7 +10,7 @@ app.get('/', (req, res, next) => {
         let domain = '';
         let subdomain = '';
         let tld = '';
-        let filePath = ''
+        let filePath = 'user3'
         if(incomingDomainDetails.length == 2){
             domain = incomingDomainDetails[0];
             tld= incomingDomainDetails[1];
@@ -36,6 +36,4 @@ app.get('/', (req, res, next) => {
         res.send('ok')
     }
 });
-
-// Instead do export the app:
-module.exports = app;
+app.listen(80, () => console.log("App in running.."))
